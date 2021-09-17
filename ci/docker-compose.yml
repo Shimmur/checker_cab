@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  tests:
+    depends_on: []
+    build:
+      context: ..
+      dockerfile: ci/Dockerfile
+      args:
+        - HEXPM_KEY
+    environment: []
+    links: []

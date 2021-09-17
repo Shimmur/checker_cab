@@ -1,0 +1,114 @@
+---
+resource_types:
+  # Used for operating on Github pull requests
+  - name: pull-request
+    type: docker-image
+    source:
+      repository: teliaoss/github-pr-resource
+
+  # Used for setting status on Github commits
+  - name: github-status
+    type: docker-image
+    source:
+      repository: dpb587/github-status-resource
+      tag: master
+
+resources:
+  # Used for fetching source and updating PR status
+  - name: git-pr
+    type: pull-request
+    check_every: 1h
+    webhook_token: b6fd0d78
+    icon: github-circle
+    source:
+      repository: Shimmur/elixir-lib-cookie-cutter
+      access_token: ((github.token))
+
+  # Used for operating on <main>
+  - name: git-main
+    type: git
+    check_every: 1h
+    webhook_token: b6fd0d78
+    source:
+      uri: https://github.com/Shimmur/elixir-lib-cookie-cutter.git
+      branch: main
+      username: ((github.username))
+      password: ((github.token))
+
+  # Used for setting status on commit
+  - name: git-status
+    type: github-status
+    source:
+      branch: main
+      repository: Shimmur/elixir-lib-cookie-cutter
+      access_token: ((github.token))
+
+  # Used as the base image for running tests; found in Shimmur/docker-images
+  - name: build-base-image
+    type: docker-image
+    source:
+      repository: quay.io/shimmur/concourse-dind
+      tag: "24969e1"
+      username: ((quayio.username))
+      password: ((quayio.password))
+
+jobs:
+  - name: test-pr
+    public: true
+    plan:
+      # Get the build-base-image/dind image
+      - get: build-base-image
+
+      # Fetch the PR (allows latter steps to use for `inputs`)
+      - get: git-pr
+        trigger: true
+        version: every
+
+      # Mark the PR as "pending" in Github
+      - put: git-pr
+        params:
+          path: git-pr
+          status: pending
+
+      # Run tests
+      - task: run-tests
+        image: build-base-image
+        params:
+          HEXPM_KEY: ((hexpm.key))
+          COVERALLS_REPO_TOKEN: ((coveralls.elixir_lib_cookie_cutter_repo_token))
+        privileged: true
+        file: git-pr/ci/tasks/test-pr.yml
+        on_failure:
+          put: git-pr
+          params:
+            path: git-pr
+            status: failure
+
+      # Mark PR as "succeeded" in Github
+      - put: git-pr
+        params:
+          path: git-pr
+          status: success
+
+  # Job will automatically run when `main` branch is updated
+  - name: test-main
+    public: true
+    plan:
+      - get: build-base-image
+      - get: git-main
+        trigger: true
+        version: every
+      - put: git-status
+        params: { state: pending, commit: git-main }
+      - task: run-tests
+        image: build-base-image
+        params:
+          HEXPM_KEY: ((hexpm.key))
+          COVERALLS_REPO_TOKEN: ((coveralls.elixir_lib_cookie_cutter_repo_token))
+        privileged: true
+        file: git-main/ci/tasks/test-main.yml
+        on_failure:
+          put: git-status
+          params: { state: failure, commit: git-main }
+      - put: git-status
+        params: { state: success, commit: git-main }

@@ -1,0 +1,21 @@
+platform: linux
+
+inputs:
+- name: git-main
+
+run:
+  path: entrypoint.sh
+  args:
+    - bash
+    - -excu
+    - |
+      cd git-main
+
+      # Disable logging of commands that contain secrets.
+      set +x
+      echo "Logging in to Docker using Vault secrets"
+      docker login -u="((quayio.username))" -p="((quayio.password))" quay.io
+      set -x
+
+      # Run the main body of the build
+      ./ci/scripts/build.sh

@@ -1,0 +1,8 @@
+{
+  "skip_files": [
+    "_build",
+    "deps",
+    "test",
+    "config"
+  ]
+}
