@@ -80,4 +80,69 @@ defmodule CookieCutterTest do
       assert Enum.sort(result) == expected_keys
     end
   end
+
+  describe "assert_values_for/1" do
+    test "success: it does not raise with identical, atom-keyed maps" do
+      expected = actual = %{key1: "value1", key2: "value2", key3: "value3"}
+      input = [expected: expected, actual: actual, fields: Map.keys(expected)]
+
+      ## kickoff
+      assert :ok == CookieCutter.assert_values_for(input)
+    end
+
+    test "success: it raises when a key in `:fields` is missing from the `:expected` input" do
+      expected = %{key1: "value1"}
+      actual = %{key1: "value1", key2: "value2"}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(actual)]
+
+      expected_message = "Key for field: #{:key2} didn't exist in #{:expected}"
+
+      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
+        CookieCutter.assert_values_for(input)
+      end)
+    end
+
+    test "success: it raises when a key in `:fields` is missing from the `:actual` input" do
+      expected = %{key1: "value1", key2: "value2"}
+      actual = %{key1: "value1"}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(expected)]
+
+      expected_message = "Key for field: #{:key2} didn't exist in #{:actual}"
+
+      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
+        CookieCutter.assert_values_for(input)
+      end)
+    end
+
+    test "success: it raises when two atom-keyed maps have the same keys, but different values" do
+      expected = %{key1: "value1", key2: "value2"}
+      actual = %{key1: "value1", key2: "unexpected_value"}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(expected)]
+
+      expected_message =
+        "Values did not match for field: #{:key2}\nexpected: #{inspect(expected.key2)}\nactual: #{inspect(actual.key2)}"
+
+      ## kickoff
+      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
+        CookieCutter.assert_values_for(input)
+      end)
+    end
+
+    test "success: with atom keys explicitly specified" do
+      expected = actual = %{key1: "value1", key2: "value2", key3: "value3"}
+      input = [expected: {expected, :atom_keys}, actual: {actual, :atom_keys}, fields: Map.keys(expected)]
+
+      ## kickoff
+      assert :ok == CookieCutter.assert_values_for(input)
+    end
+  end
+
+  defp formatted_error_message(message) do
+    error = %ExUnit.AssertionError{message: message}
+
+    ExUnit.AssertionError.message(error)
+  end
 end
