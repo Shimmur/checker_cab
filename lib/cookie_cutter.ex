@@ -26,6 +26,7 @@ defmodule CookieCutter do
     raw_actual = Keyword.fetch!(all_the_things, :actual)
     raw_fields = Keyword.get(all_the_things, :fields)
     raw_skip_fields = Keyword.get(all_the_things, :skip_fields, [])
+    opts = all_the_things[:opts] || []
 
     expected = convert_to_atom_keys(raw_expected)
     actual = convert_to_atom_keys(raw_actual)
@@ -34,6 +35,9 @@ defmodule CookieCutter do
     for field <- fields do
       with {{:ok, expected_value}, _} <- {Map.fetch(expected, field), :expected},
            {{:ok, actual_value}, _} <- {Map.fetch(actual, field), :actual} do
+        expected_value = maybe_convert_datetime_to_string(expected_value, opts[:convert_dates])
+        actual_value = maybe_convert_datetime_to_string(actual_value, opts[:convert_dates])
+
         assert(
           expected_value == actual_value,
           "Values did not match for field: #{inspect(field)}\nexpected: #{inspect(expected_value)}\nactual: #{
@@ -63,5 +67,17 @@ defmodule CookieCutter do
         field when is_atom(field) -> field
       end
     )
+  end
+
+  defp maybe_convert_datetime_to_string(%DateTime{} = datetime, true = _convert_dates) do
+    DateTime.to_iso8601(datetime)
+  end
+
+  defp maybe_convert_datetime_to_string(%Date{} = date, true = _convert_dates) do
+    Date.to_iso8601(date)
+  end
+
+  defp maybe_convert_datetime_to_string(datetime, _) do
+    datetime
   end
 end

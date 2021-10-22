@@ -179,6 +179,19 @@ defmodule CookieCutterTest do
     end
   end
 
+  describe "assert_values for with options" do
+    test "success: with :convert_dates set to true" do
+      datetime = DateTime.utc_now()
+      date = datetime |> DateTime.to_date()
+      expected = %{key1: datetime, key2: date}
+      actual = %{key1: DateTime.to_iso8601(datetime), key2: Date.to_iso8601(date)}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(expected), opts: [convert_dates: true]]
+
+      assert :ok == CookieCutter.assert_values_for(input)
+    end
+  end
+
   defp formatted_error_message(message) do
     error = %ExUnit.AssertionError{message: message}
 
