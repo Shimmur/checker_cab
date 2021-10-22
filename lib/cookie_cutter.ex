@@ -25,10 +25,11 @@ defmodule CookieCutter do
     raw_expected = Keyword.fetch!(all_the_things, :expected)
     raw_actual = Keyword.fetch!(all_the_things, :actual)
     raw_fields = Keyword.get(all_the_things, :fields)
+    raw_skip_fields = Keyword.get(all_the_things, :skip_fields, [])
 
     expected = convert_to_atom_keys(raw_expected)
     actual = convert_to_atom_keys(raw_actual)
-    fields = maybe_convert_fields_to_atoms(raw_fields)
+    fields = maybe_convert_fields_to_atoms(raw_fields) -- maybe_convert_fields_to_atoms(raw_skip_fields)
 
     for field <- fields do
       with {{:ok, expected_value}, _} <- {Map.fetch(expected, field), :expected},

@@ -159,6 +159,24 @@ defmodule CookieCutterTest do
       # if things match, :ok. If they don't, it will raise.
       assert :ok == CookieCutter.assert_values_for(input)
     end
+
+    test "success: with skip_fields key passed in" do
+      expected = %{key1: "value1", key2: "value2"}
+      actual = %{key1: "value1", key2: "unexpected_value"}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(expected), skip_fields: [:key2]]
+
+      assert :ok == CookieCutter.assert_values_for(input)
+    end
+
+    test "success: with string skip_fields key passed in" do
+      expected = %{key1: "value1", key2: "value2"}
+      actual = %{key1: "value1", key2: "unexpected_value"}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(expected), skip_fields: ["key2"]]
+
+      assert :ok == CookieCutter.assert_values_for(input)
+    end
   end
 
   defp formatted_error_message(message) do
