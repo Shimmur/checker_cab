@@ -96,7 +96,7 @@ defmodule CookieCutterTest do
 
       input = [expected: expected, actual: actual, fields: Map.keys(actual)]
 
-      expected_message = "Key for field: #{:key2} didn't exist in #{:expected}"
+      expected_message = "Key for field: #{inspect(:key2)} didn't exist in #{:expected}"
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
         CookieCutter.assert_values_for(input)
@@ -109,7 +109,7 @@ defmodule CookieCutterTest do
 
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
-      expected_message = "Key for field: #{:key2} didn't exist in #{:actual}"
+      expected_message = "Key for field: #{inspect(:key2)} didn't exist in #{:actual}"
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
         CookieCutter.assert_values_for(input)
@@ -123,7 +123,9 @@ defmodule CookieCutterTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message =
-        "Values did not match for field: #{:key2}\nexpected: #{inspect(expected.key2)}\nactual: #{inspect(actual.key2)}"
+        "Values did not match for field: #{inspect(:key2)}\nexpected: #{inspect(expected.key2)}\nactual: #{
+          inspect(actual.key2)
+        }"
 
       ## kickoff
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
@@ -136,6 +138,25 @@ defmodule CookieCutterTest do
       input = [expected: {expected, :atom_keys}, actual: {actual, :atom_keys}, fields: Map.keys(expected)]
 
       ## kickoff
+      # if things match, :ok. If they don't, it will raise.
+      assert :ok == CookieCutter.assert_values_for(input)
+    end
+
+    test "success: with string keys explicitly specified" do
+      expected = actual = %{"key1" => "value1", "key2" => "value2", "key3" => "value3"}
+      input = [expected: {expected, :string_keys}, actual: {actual, :string_keys}, fields: [:key1, :key2, :key3]]
+
+      ## kickoff
+      # if things match, :ok. If they don't, it will raise.
+      assert :ok == CookieCutter.assert_values_for(input)
+    end
+
+    test "success: with fields as strings" do
+      expected = actual = %{"key1" => "value1", "key2" => "value2", "key3" => "value3"}
+      input = [expected: {expected, :string_keys}, actual: {actual, :string_keys}, fields: Map.keys(expected)]
+
+      ## kickoff
+      # if things match, :ok. If they don't, it will raise.
       assert :ok == CookieCutter.assert_values_for(input)
     end
   end
