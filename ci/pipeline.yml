@@ -38,6 +38,7 @@ resources:
   # Used for setting status on commit
   - name: git-status
     type: github-status
+    check_every: 1h
     source:
       branch: main
       repository: Shimmur/elixir-lib-cookie-cutter
