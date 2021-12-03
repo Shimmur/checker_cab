@@ -59,6 +59,7 @@ defmodule CheckerCabTest do
 
       expected_keys = [:field1, :field2, :field3, :id]
 
+      # list is hard-coded because deriving them would require identical logic to the code under test
       assert Enum.sort(result) == Enum.sort(expected_keys)
     end
 
@@ -68,6 +69,7 @@ defmodule CheckerCabTest do
       ### kickoff
       result = CheckerCab.fields_for(input)
 
+      # list is hard-coded because deriving them would require identical logic to the code under test
       expected_keys = [:field1, :field2, :field3, :id]
 
       assert Enum.sort(result) == Enum.sort(expected_keys)
