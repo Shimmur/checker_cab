@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.1] - 2021-12-02
+- Add a LICENSE
+- Add package metadata
+
 ## [0.1.0] - 2021-12-02
 - Update README
 - Add a CHANGELOG.md
