@@ -12,6 +12,8 @@ defmodule CheckerCabTest do
       field(:field1, :integer)
       field(:field2, :string)
       field(:field3, :boolean)
+      # this field will not show up
+      field(:field4, :string, virtual: true)
     end
   end
 
@@ -49,35 +51,26 @@ defmodule CheckerCabTest do
       assert Enum.sort(result) == expected_keys
     end
 
-    test "success: it returns a stripped list of atoms if passed an Ecto.Schema" do
+    test "success: it returns a stripped list of atoms, excluding virtual fields, if passed an Ecto.Schema" do
       input = %ModuleForEctoSchemaTests{}
 
       ### kickoff
       result = CheckerCab.fields_for(input)
 
-      expected_keys =
-        input
-        |> Map.keys()
-        |> Enum.reject(fn key -> key in [:__meta__, :__struct__] end)
-        |> Enum.sort()
+      expected_keys = [:field1, :field2, :field3, :id]
 
-      assert Enum.sort(result) == expected_keys
+      assert Enum.sort(result) == Enum.sort(expected_keys)
     end
 
-    test "success: it returns a stripped list of atoms if passed an Ecto.Schema name" do
+    test "success: it returns a stripped list of atoms, excluding virtual fields, if passed an Ecto.Schema name" do
       input = ModuleForEctoSchemaTests
 
       ### kickoff
       result = CheckerCab.fields_for(input)
 
-      expected_keys =
-        input
-        |> struct()
-        |> Map.keys()
-        |> Enum.reject(fn key -> key in [:__meta__, :__struct__] end)
-        |> Enum.sort()
+      expected_keys = [:field1, :field2, :field3, :id]
 
-      assert Enum.sort(result) == expected_keys
+      assert Enum.sort(result) == Enum.sort(expected_keys)
     end
   end
 
