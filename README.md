@@ -1,12 +1,30 @@
 # CheckerCab
 
-**Important**: if you're creating a new Elixir library or service, make sure to read the Elixir project runbook in the [engineering repo](https://github.com/Shimmur/engineering/blob/main/runbooks/services/elixir_application.md).
+`assert_values_for` and friends.
 
-## Creating an Elixir project
 
-  1. Use this repository as a GitHub template when creating a new repository.
+## Contributing
+### Releasing a new version
 
-  1. Run ./replace.sh my_app MyApp (with the right application name) to replace
-     all instances of the name "cookie cutter" with the right names. For
-     example, ./replace abc_handler ABCHandler. The replace.sh script will
-     destroy itself once it runs.
+To release a new version of this library, you have to
+
+  * Bump the version
+  * Update the changelog
+  * Release on Hex
+
+#### Updating version and changelog
+
+To bump the version, update it in [`mix.exs`](./mix.exs). We use semantic versioning (`MAJOR.MINOR.PATCH`) which means:
+
+  * Bump the `MAJOR` version only if there are breaking changes (first get approval from the platform pod)
+  * Bump the `MINOR` version if you introduced new features
+  * Bump the `PATCH` version if you fixed bugs
+
+In the same code change that updates the version (such as a PR), also update the [`CHANGELOG.md`](./CHANGELOG.md) file with a new entry.
+
+#### Publish on Hex
+
+To publish this package:
+
+  * Make sure you're authenticated as a local user with `mix hex.user auth`
+  * Run `mix hex.publish`
