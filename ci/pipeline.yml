@@ -21,7 +21,7 @@ resources:
     webhook_token: b6fd0d78
     icon: github-circle
     source:
-      repository: Shimmur/elixir-lib-cookie-cutter
+      repository: Shimmur/checker_cab
       access_token: ((github.token))
 
   # Used for operating on <main>
@@ -30,7 +30,7 @@ resources:
     check_every: 1h
     webhook_token: b6fd0d78
     source:
-      uri: https://github.com/Shimmur/elixir-lib-cookie-cutter.git
+      uri: https://github.com/Shimmur/checker_cab.git
       branch: main
       username: ((github.username))
       password: ((github.token))
@@ -41,7 +41,7 @@ resources:
     check_every: 1h
     source:
       branch: main
-      repository: Shimmur/elixir-lib-cookie-cutter
+      repository: Shimmur/checker_cab
       access_token: ((github.token))
 
   # Used as the base image for running tests; found in Shimmur/docker-images
@@ -76,7 +76,7 @@ jobs:
         image: build-base-image
         params:
           HEXPM_KEY: ((hexpm.key))
-          COVERALLS_REPO_TOKEN: ((coveralls.elixir_lib_cookie_cutter_repo_token))
+          COVERALLS_REPO_TOKEN: ((coveralls.elixir_lib_checker_cab_repo_token))
         privileged: true
         file: git-pr/ci/tasks/test-pr.yml
         on_failure:
@@ -105,7 +105,7 @@ jobs:
         image: build-base-image
         params:
           HEXPM_KEY: ((hexpm.key))
-          COVERALLS_REPO_TOKEN: ((coveralls.elixir_lib_cookie_cutter_repo_token))
+          COVERALLS_REPO_TOKEN: ((coveralls.elixir_lib_checker_cab_repo_token))
         privileged: true
         file: git-main/ci/tasks/test-main.yml
         on_failure:

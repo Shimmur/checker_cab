@@ -1,4 +1,4 @@
-defmodule CookieCutterTest do
+defmodule CheckerCabTest do
   use ExUnit.Case
 
   defmodule ModuleForStructTests do
@@ -20,7 +20,7 @@ defmodule CookieCutterTest do
       input = %{key1: "value1", key2: "value2", key3: "value3"}
 
       ### kickoff
-      result = CookieCutter.fields_for(input)
+      result = CheckerCab.fields_for(input)
 
       assert Enum.sort(result) == Enum.sort(Map.keys(input))
     end
@@ -29,7 +29,7 @@ defmodule CookieCutterTest do
       input = %{"key1" => :value1, "key2" => :value2, "key3" => :value3}
 
       ### kickoff
-      result = CookieCutter.fields_for(input)
+      result = CheckerCab.fields_for(input)
 
       assert Enum.sort(result) == Enum.sort(Map.keys(input))
     end
@@ -38,7 +38,7 @@ defmodule CookieCutterTest do
       input = %ModuleForStructTests{}
 
       ### kickoff
-      result = CookieCutter.fields_for(input)
+      result = CheckerCab.fields_for(input)
 
       expected_keys =
         input
@@ -53,7 +53,7 @@ defmodule CookieCutterTest do
       input = %ModuleForEctoSchemaTests{}
 
       ### kickoff
-      result = CookieCutter.fields_for(input)
+      result = CheckerCab.fields_for(input)
 
       expected_keys =
         input
@@ -68,7 +68,7 @@ defmodule CookieCutterTest do
       input = ModuleForEctoSchemaTests
 
       ### kickoff
-      result = CookieCutter.fields_for(input)
+      result = CheckerCab.fields_for(input)
 
       expected_keys =
         input
@@ -87,7 +87,7 @@ defmodule CookieCutterTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       ## kickoff
-      assert :ok == CookieCutter.assert_values_for(input)
+      assert :ok == CheckerCab.assert_values_for(input)
     end
 
     test "success: it raises when a key in `:fields` is missing from the `:expected` input" do
@@ -99,7 +99,7 @@ defmodule CookieCutterTest do
       expected_message = "Key for field: #{inspect(:key2)} didn't exist in #{:expected}"
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
-        CookieCutter.assert_values_for(input)
+        CheckerCab.assert_values_for(input)
       end)
     end
 
@@ -112,7 +112,7 @@ defmodule CookieCutterTest do
       expected_message = "Key for field: #{inspect(:key2)} didn't exist in #{:actual}"
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
-        CookieCutter.assert_values_for(input)
+        CheckerCab.assert_values_for(input)
       end)
     end
 
@@ -129,7 +129,7 @@ defmodule CookieCutterTest do
 
       ## kickoff
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
-        CookieCutter.assert_values_for(input)
+        CheckerCab.assert_values_for(input)
       end)
     end
 
@@ -139,7 +139,7 @@ defmodule CookieCutterTest do
 
       ## kickoff
       # if things match, :ok. If they don't, it will raise.
-      assert :ok == CookieCutter.assert_values_for(input)
+      assert :ok == CheckerCab.assert_values_for(input)
     end
 
     test "success: with string keys explicitly specified" do
@@ -148,7 +148,7 @@ defmodule CookieCutterTest do
 
       ## kickoff
       # if things match, :ok. If they don't, it will raise.
-      assert :ok == CookieCutter.assert_values_for(input)
+      assert :ok == CheckerCab.assert_values_for(input)
     end
 
     test "success: with fields as strings" do
@@ -157,7 +157,7 @@ defmodule CookieCutterTest do
 
       ## kickoff
       # if things match, :ok. If they don't, it will raise.
-      assert :ok == CookieCutter.assert_values_for(input)
+      assert :ok == CheckerCab.assert_values_for(input)
     end
 
     test "success: with skip_fields key passed in" do
@@ -166,7 +166,7 @@ defmodule CookieCutterTest do
 
       input = [expected: expected, actual: actual, fields: Map.keys(expected), skip_fields: [:key2]]
 
-      assert :ok == CookieCutter.assert_values_for(input)
+      assert :ok == CheckerCab.assert_values_for(input)
     end
 
     test "success: with string skip_fields key passed in" do
@@ -175,7 +175,7 @@ defmodule CookieCutterTest do
 
       input = [expected: expected, actual: actual, fields: Map.keys(expected), skip_fields: ["key2"]]
 
-      assert :ok == CookieCutter.assert_values_for(input)
+      assert :ok == CheckerCab.assert_values_for(input)
     end
   end
 
@@ -188,7 +188,7 @@ defmodule CookieCutterTest do
 
       input = [expected: expected, actual: actual, fields: Map.keys(expected), opts: [convert_dates: true]]
 
-      assert :ok == CookieCutter.assert_values_for(input)
+      assert :ok == CheckerCab.assert_values_for(input)
     end
   end
 
