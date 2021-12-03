@@ -1,11 +1,11 @@
-defmodule CookieCutter.MixProject do
+defmodule CheckerCab.MixProject do
   use Mix.Project
 
   @version "0.1.0"
 
   def project do
     [
-      app: :cookie_cutter,
+      app: :checker_cab,
       version: @version,
       elixir: "~> 1.11.2",
       test_coverage: [tool: ExCoveralls],
@@ -35,7 +35,7 @@ defmodule CookieCutter.MixProject do
     [
       organization: "community",
       description: "TODO",
-      links: %{"GitHub" => "https://github.com/Shimmur/elixir-lib-cookie-cutter"}
+      links: %{"GitHub" => "https://github.com/Shimmur/checker_cab"}
     ]
   end
 

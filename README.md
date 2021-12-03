@@ -1,4 +1,4 @@
-# CookieCutter
+# CheckerCab
 
 **Important**: if you're creating a new Elixir library or service, make sure to read the Elixir project runbook in the [engineering repo](https://github.com/Shimmur/engineering/blob/main/runbooks/services/elixir_application.md).
 

@@ -1,6 +1,6 @@
-defmodule CookieCutter do
+defmodule CheckerCab do
   @moduledoc """
-  Documentation for CookieCutter.
+  Documentation for CheckerCab.
   """
   import ExUnit.Assertions, only: [assert: 2, flunk: 1]
 

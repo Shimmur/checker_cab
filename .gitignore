@@ -20,7 +20,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-cookie_cutter-*.tar
+checker_cab-*.tar
 
 # Gets created when CI setup is used locally.
 /ci/creds
