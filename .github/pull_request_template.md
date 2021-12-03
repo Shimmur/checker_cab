@@ -1,10 +1,23 @@
-<!-- Uncomment the line below for a link to a ticket, or ignore if there's no ticket -->
-<!-- This is a requirement of ticket: TICKET_LINK  -->
+### What does this do on a high level?
 
-### What does this do on a high level and why?
 
-A quick sentence just so folks get an idea about the what, why, and how of these changes.
+### How was this change made?
 
-### How was this verified?
 
-Fill this section if you had to do any manual testing or something out of the ordinary to test the changes in this PR.
+### Why is this change necessary?
+
+<!-- This is a requirement of ticket [ticket_number](ticket_link).  -->
+
+
+### How will this be verified?
+- [ ] The PR includes new tests
+- [ ] Current test suite covers functionality
+- [ ] This has been tested locally
+- [ ] This has been tested in `dev`
+
+### Any additional information or special handling required on this PR? 
+<!-- - [ ] This requires [configuration changes](link_to_deploy_configs).  -->
+
+_motivational imagery_
+![description](url)
+
