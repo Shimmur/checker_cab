@@ -12,7 +12,7 @@ defmodule CheckerCabTest do
       field(:field1, :integer)
       field(:field2, :string)
       field(:field3, :boolean)
-      # this field will not show up
+      # this field will not show up in `fields_for/1` and by extension `assert_values_for/1`
       field(:field4, :string, virtual: true)
     end
   end
