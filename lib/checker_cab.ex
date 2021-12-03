@@ -10,14 +10,18 @@ defmodule CheckerCab do
           fields: list(atom())
         ]
 
-  def fields_for(map) when is_map(map) do
-    map
-    |> Map.keys()
-    |> Enum.reject(fn key -> key in [:__meta__, :__struct__] end)
+  def fields_for(%schema_name{__meta__: _}) do
+    schema_name.__schema__(:fields)
   end
 
   def fields_for(schema_name) when is_atom(schema_name) do
     schema_name.__schema__(:fields)
+  end
+
+  def fields_for(map) when is_map(map) do
+    map
+    |> Map.keys()
+    |> Enum.reject(fn key -> key in [:__struct__] end)
   end
 
   @spec assert_values_for(inputs()) :: :ok | no_return()
