@@ -16,6 +16,36 @@ defmodule CheckerCab do
           opts: list(option)
         ]
 
+  @doc """
+  Returns the keys of a map or struct.
+
+  ## Examples
+
+      iex> fields_for(%{"string_key1" => :value, "string_key2" => :value})
+      ["string_key1", "string_key2"]
+
+      iex> fields_for(%{atom_key1: :value, atom_key2: :value})
+      [:atom_key1, :atom_key2]
+
+  Returns a list of defined keys from struct arguments (`:__struct__` is not
+  returned)
+
+      iex> fields_for(%StructModule{})
+      [:key1, :key2, :key3]
+
+  Returns a list of defined keys from `Ecto.Schema` arguments, but does not
+  return virtual fields.
+
+      iex> fields_for(%EctoSchemaModule{})
+      [:id, :field1, :field2, :field3]
+
+  Additionally, the function accepts the module name of an `Ecto.Schema`.
+  This does not work with structs.
+
+      iex> fields_for(EctoSchemaModule)
+      [:id, :field1, :field2, :field3]
+  """
+  @spec fields_for(map() | struct() | Ecto.Schema.t() | module()) :: list(atom() | String.t())
   def fields_for(%schema_name{__meta__: _}) do
     schema_name.__schema__(:fields)
   end
