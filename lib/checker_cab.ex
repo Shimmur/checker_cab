@@ -4,10 +4,16 @@ defmodule CheckerCab do
   """
   import ExUnit.Assertions, only: [assert: 2, flunk: 1]
 
+  @type option :: {:convert_dates, boolean()}
+
+  @type comparable_input :: map() | {map(), :string_keys | :atom_keys}
+
   @type inputs :: [
-          expected: map(),
-          actual: map(),
-          fields: list(atom())
+          expected: comparable_input(),
+          actual: comparable_input(),
+          fields: list(atom()),
+          skip_fields: list(atom()),
+          opts: list(option)
         ]
 
   def fields_for(%schema_name{__meta__: _}) do
