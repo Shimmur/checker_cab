@@ -1,6 +1,9 @@
 defmodule CheckerCab do
   @moduledoc """
   Documentation for CheckerCab.
+
+  This documentation assumes these functions are used in the context of unit
+  tests.
   """
   import ExUnit.Assertions, only: [assert: 2, flunk: 1]
 
@@ -60,6 +63,34 @@ defmodule CheckerCab do
     |> Enum.reject(fn key -> key in [:__struct__] end)
   end
 
+  @doc """
+  Compares the values of two maps for specified keys.
+
+  This function assumes keys are atoms unless specified as `:string_keys`, and
+  will convert keys into a common type before comparing values (can compare
+  atom-keyed and string-keyed maps with same-named keys).
+
+  When values do not match, this function will flunk the current test with
+  explicit information about the first value that did not match.
+
+  This function also accepts a list of fields to _not_ compare, and can be mixed
+  with the fields to compare.
+
+  ## Options
+  * `:convert_dates`
+    When `true`, will convert date-representing values to ISO-8601 formatted
+  strings.
+
+  ## Examples
+  ```
+  expected = %{key1: :value, key2: :value, key3: :value}
+  actual = %{key1: :value, key2: :value, key3: :value}
+
+  ## returns :ok when expected and actual match
+  assert_values_for(%{expected: expected, actual: actual, fields: fields_for(expected)})
+  ```
+
+  """
   @spec assert_values_for(inputs()) :: :ok | no_return()
   def assert_values_for(all_the_things) do
     raw_expected = Keyword.fetch!(all_the_things, :expected)
