@@ -66,15 +66,16 @@ defmodule CheckerCab do
   @doc """
   Compares the values of two maps for specified keys.
 
-  This function assumes keys are atoms unless specified as `:string_keys`, and
-  will convert keys into a common type before comparing values (can compare
-  atom-keyed and string-keyed maps with same-named keys).
-
   When values do not match, this function will flunk the current test with
   explicit information about the first value that did not match.
 
   This function also accepts a list of fields to _not_ compare, and can be mixed
   with the fields to compare.
+
+  This function assumes keys are atoms unless specified as `:string_keys`, and
+  will convert keys into a common type before comparing values (can compare
+  atom-keyed and string-keyed maps with same-named keys). Additionally,
+  `:atom_keys` can be provided to be more explicit.
 
   ## Options
   * `:convert_dates`
@@ -83,13 +84,50 @@ defmodule CheckerCab do
 
   ## Examples
   ```
+  ## your_unit_test.exs
   expected = %{key1: :value, key2: :value, key3: :value}
-  actual = %{key1: :value, key2: :value, key3: :value}
+  actual = %{"key1" => :value, "key2" => :value, "key3" => :value}
 
   ## returns :ok when expected and actual match
-  assert_values_for(%{expected: expected, actual: actual, fields: fields_for(expected)})
+  assert_values_for(
+    expected: expected,
+    actual: {actual, :string_keys},
+    fields: [:key1, :key2, :key3]
+  )
   ```
 
+  With dates:
+
+  ```
+  expected = %{date: ~U[2021-12-17 03:08:36.579609Z], key2: :value, key3: :value}
+  actual = %{"date" => "2021-12-17T03:08:36.579609Z", "key2" => :value, "key3" => :value}
+
+  ## Will not flunk for different types of dates if they both convert to the
+  same ISO 8601 string
+
+  assert_values_for(
+    expected: expected,
+    actual: {actual, :string_keys},
+    fields: [:date, :key2, :key3],
+    opts: [convert_dates: true]
+  )
+  ```
+
+  Using `:skip_fields`:
+
+  ```
+  expected = %{key1: :value, key2: :value, key3: :value, value_that_wont_match: "Panama"}
+  actual = %{key1: :value, key2: :value, key3: :value, value_that_wont_match: "Manimal"}
+
+  ## Returns :ok when expected and actual match. Can exclude fields anticipated
+  to be different.
+  assert_values_for(
+    expected: expected,
+    actual: actual,
+    fields: [:key1, :key2, :key3],
+    skip_fields: [:value_that_wont_match]
+  )
+  ```
   """
   @spec assert_values_for(inputs()) :: :ok | no_return()
   def assert_values_for(all_the_things) do
