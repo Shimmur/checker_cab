@@ -55,7 +55,6 @@ resources:
 
 jobs:
   - name: test-pr
-    public: true
     plan:
       # Get the build-base-image/dind image
       - get: build-base-image
@@ -93,7 +92,6 @@ jobs:
 
   # Job will automatically run when `main` branch is updated
   - name: test-main
-    public: true
     plan:
       - get: build-base-image
       - get: git-main
