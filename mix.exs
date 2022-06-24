@@ -49,8 +49,7 @@ defmodule CheckerCab.MixProject do
       {:ecto, "~> 3.7"},
       {:ex_doc, "~> 0.20", only: :dev},
       {:dialyxir, "~> 0.5", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.14.0", only: :test},
-      {:linter, "~> 1.1", organization: "community", only: [:dev, :test], runtime: false}
+      {:excoveralls, "~> 0.14.0", only: :test}
     ]
   end
 end
