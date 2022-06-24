@@ -7,7 +7,7 @@ defmodule CheckerCab.MixProject do
     [
       app: :checker_cab,
       version: @version,
-      elixir: "~> 1.11.2",
+      elixir: "~> 1.11",
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         coveralls: :test,
