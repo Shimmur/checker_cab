@@ -118,9 +118,7 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message =
-        "Values did not match for field: #{inspect(:key2)}\nexpected: #{inspect(expected.key2)}\nactual: #{
-          inspect(actual.key2)
-        }"
+        "Values did not match for field: #{inspect(:key2)}\nexpected: #{inspect(expected.key2)}\nactual: #{inspect(actual.key2)}"
 
       ## kickoff
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->

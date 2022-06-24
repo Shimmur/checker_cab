@@ -149,9 +149,7 @@ defmodule CheckerCab do
 
         assert(
           expected_value == actual_value,
-          "Values did not match for field: #{inspect(field)}\nexpected: #{inspect(expected_value)}\nactual: #{
-            inspect(actual_value)
-          }"
+          "Values did not match for field: #{inspect(field)}\nexpected: #{inspect(expected_value)}\nactual: #{inspect(actual_value)}"
         )
       else
         {:error, type} -> flunk("Key for field: #{inspect(field)} didn't exist in #{type}")
