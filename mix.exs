@@ -1,13 +1,13 @@
 defmodule CheckerCab.MixProject do
   use Mix.Project
 
-  @version "0.2.1"
+  @version "0.3.1"
 
   def project do
     [
       app: :checker_cab,
       version: @version,
-      elixir: "~> 1.11",
+      elixir: "~> 1.12.3",
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         coveralls: :test,
