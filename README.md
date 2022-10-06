@@ -150,10 +150,3 @@ To bump the version, update it in [`mix.exs`](./mix.exs). We use semantic versio
   * Bump the `PATCH` version if you fixed bugs
 
 In the same code change that updates the version (such as a PR), also update the [`CHANGELOG.md`](./CHANGELOG.md) file with a new entry.
-
-#### Publish on Hex
-
-To publish this package:
-
-  * Make sure you're authenticated as a local user with `mix hex.user auth`
-  * Run `mix hex.publish`
