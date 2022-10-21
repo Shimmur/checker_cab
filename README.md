@@ -73,7 +73,7 @@ Add it to your deps.
 def deps do
   [
     ## check hex.pm for the latest version
-    {:checker_cab, "~> 0.2.0", organization: "community", runtime: false, only: [:test]},
+    {:checker_cab, "~> 1.0.0", runtime: false, only: [:test]},
   ]
 end
 ```

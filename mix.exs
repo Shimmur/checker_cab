@@ -1,7 +1,7 @@
 defmodule CheckerCab.MixProject do
   use Mix.Project
 
-  @version "0.2.1"
+  @version "1.0.0"
 
   def project do
     [
@@ -33,12 +33,10 @@ defmodule CheckerCab.MixProject do
 
   defp package do
     [
-      organization: "community",
       description: "Test assertion helpers including assert_values_for",
       links: %{"GitHub" => "https://github.com/Shimmur/checker_cab"},
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Jeffrey Matthias", "Geoff Smith"],
-      organization: "community",
       licenses: ["MIT"]
     ]
   end
