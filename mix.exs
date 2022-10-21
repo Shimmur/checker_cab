@@ -37,7 +37,6 @@ defmodule CheckerCab.MixProject do
       links: %{"GitHub" => "https://github.com/Shimmur/checker_cab"},
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Jeffrey Matthias", "Geoff Smith"],
-      organization: "community",
       licenses: ["MIT"]
     ]
   end
