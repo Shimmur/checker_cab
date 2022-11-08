@@ -91,7 +91,10 @@ defmodule CheckerCabTest do
 
       input = [expected: expected, actual: actual, fields: Map.keys(actual)]
 
-      expected_message = "Key for field: #{inspect(:key2)} didn't exist in #{:expected}"
+      expected_message = """
+      Key for:
+        field: #{inspect(:key2)} didn't exist in #{:expected}
+      """
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
         CheckerCab.assert_values_for(input)
@@ -104,7 +107,27 @@ defmodule CheckerCabTest do
 
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
-      expected_message = "Key for field: #{inspect(:key2)} didn't exist in #{:actual}"
+      expected_message = """
+      Key for:
+        field: #{inspect(:key2)} didn't exist in #{:actual}
+      """
+
+      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
+        CheckerCab.assert_values_for(input)
+      end)
+    end
+
+    test "success: raised errors include all missing fields" do
+      expected = %{key1: "value1", key2: "value2", key3: "value3"}
+      actual = %{key1: "value1"}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(expected)]
+
+      expected_message = """
+      Key for:
+        field: #{inspect(:key2)} didn't exist in #{:actual}
+        field: #{inspect(:key3)} didn't exist in #{:actual}
+      """
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
         CheckerCab.assert_values_for(input)
@@ -117,8 +140,34 @@ defmodule CheckerCabTest do
 
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
-      expected_message =
-        "Values did not match for field: #{inspect(:key2)}\nexpected: #{inspect(expected.key2)}\nactual: #{inspect(actual.key2)}"
+      expected_message = """
+      Values did not match for:
+        field: #{inspect(:key2)}
+          expected: #{inspect(expected.key2)}
+          actual: #{inspect(actual.key2)}
+      """
+
+      ## kickoff
+      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
+        CheckerCab.assert_values_for(input)
+      end)
+    end
+
+    test "success: raised errors include all mismatched fields" do
+      expected = %{key1: "value1", key2: "value2", key3: "value3"}
+      actual = %{key1: "value1", key2: "unexpected_value", key3: "also_unexpected"}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(expected)]
+
+      expected_message = """
+      Values did not match for:
+        field: #{inspect(:key2)}
+          expected: #{inspect(expected.key2)}
+          actual: #{inspect(actual.key2)}
+        field: #{inspect(:key3)}
+          expected: #{inspect(expected.key3)}
+          actual: #{inspect(actual.key3)}
+      """
 
       ## kickoff
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
