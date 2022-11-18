@@ -1,4 +1,6 @@
 # Changelog
+## [1.0.1] - 2022-11-17
+- Add improved failure output: catch and batch failures
 
 ## [1.0.0] - 2022-10-20
 - Update README
