@@ -3,7 +3,7 @@
 `assert_values_for` and friends.
 
 [View the full documentation on
-Hex](community.hexdocs.pm/checker_cab/api-reference.html).
+Hex](https://hexdocs.pm/checker_cab/api-reference.html).
 
 ## Explanation
 ### What is Checker Cab?
