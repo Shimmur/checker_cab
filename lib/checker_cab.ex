@@ -5,7 +5,7 @@ defmodule CheckerCab do
   This documentation assumes these functions are used in the context of unit
   tests.
   """
-  import ExUnit.Assertions, only: [assert: 2, flunk: 1]
+  import ExUnit.Assertions, only: [assert: 2]
 
   @type option :: {:convert_dates, boolean()}
 
@@ -141,22 +141,84 @@ defmodule CheckerCab do
     actual = convert_to_atom_keys(raw_actual)
     fields = maybe_convert_fields_to_atoms(raw_fields) -- maybe_convert_fields_to_atoms(raw_skip_fields)
 
-    for field <- fields do
-      with {{:ok, expected_value}, _} <- {Map.fetch(expected, field), :expected},
-           {{:ok, actual_value}, _} <- {Map.fetch(actual, field), :actual} do
-        expected_value = maybe_convert_datetime_to_string(expected_value, opts[:convert_dates])
-        actual_value = maybe_convert_datetime_to_string(actual_value, opts[:convert_dates])
+    field_comparisons =
+      Enum.map(fields, fn field ->
+        expected_value = fetch_and_convert(expected, field, opts)
+        actual_value = fetch_and_convert(actual, field, opts)
 
-        assert(
-          expected_value == actual_value,
-          "Values did not match for field: #{inspect(field)}\nexpected: #{inspect(expected_value)}\nactual: #{inspect(actual_value)}"
-        )
-      else
-        {:error, type} -> flunk("Key for field: #{inspect(field)} didn't exist in #{type}")
-      end
-    end
+        %{
+          field: field,
+          expected: expected_value,
+          actual: actual_value
+        }
+      end)
+
+    {missing, populated} = Enum.split_with(field_comparisons, &missing_either_value?/1)
+    mismatched = Enum.filter(populated, &mismatched?/1)
+
+    assert(
+      Enum.empty?(missing) && Enum.empty?(mismatched),
+      error_message_for(missing, mismatched)
+    )
 
     :ok
+  end
+
+  defp missing_either_value?(%{expected: expected, actual: actual}) do
+    !match?({:ok, _}, expected) || !match?({:ok, _}, actual)
+  end
+
+  defp mismatched?(%{expected: expected, actual: actual}) do
+    expected != actual
+  end
+
+  defp fetch_and_convert(map, field_name, opts) do
+    with {:ok, value} <- Map.fetch(map, field_name) do
+      {:ok, maybe_convert_datetime_to_string(value, opts[:convert_dates])}
+    end
+  end
+
+  defp error_message_for(missing, mismatched) do
+    [error_message_for_missing(missing), error_message_for_mismatched(mismatched)]
+    |> Enum.reject(&(&1 == ""))
+    |> Enum.join("\n")
+  end
+
+  defp error_message_for_missing([]) do
+    ""
+  end
+
+  defp error_message_for_missing(missing) do
+    "Key for:\n" <>
+      (missing
+       |> Enum.sort_by(& &1.field)
+       |> Enum.map_join(fn %{field: field} = comparison ->
+         comparison
+         |> Map.take([:expected, :actual])
+         |> Enum.reject(&match?({_key, {:ok, _}}, &1))
+         |> Enum.map_join(fn {type, _value} ->
+           """
+             field: #{inspect(field)} didn't exist in #{type}
+           """
+         end)
+       end))
+  end
+
+  defp error_message_for_mismatched([]) do
+    ""
+  end
+
+  defp error_message_for_mismatched(mismatched) do
+    "Values did not match for:\n" <>
+      (mismatched
+       |> Enum.sort_by(& &1.field)
+       |> Enum.map_join(fn %{field: field, expected: {:ok, expected}, actual: {:ok, actual}} ->
+         """
+           field: #{inspect(field)}
+             expected: #{inspect(expected)}
+             actual: #{inspect(actual)}
+         """
+       end))
   end
 
   defp convert_to_atom_keys({map, :atom_keys}), do: map
