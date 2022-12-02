@@ -189,6 +189,23 @@ defmodule CheckerCab do
   end
 
   defp error_message_for_missing(missing) do
+    missing
+    |> Enum.sort_by(& &1.field)
+    |> Enum.reduce(["Key for:"], fn
+      %{actual: :error, expected: :error, field: field}, acc ->
+        ["  field #{inspect(field)} didn't exist in actual and expected" | acc]
+
+      %{actual: :error, field: field}, acc ->
+        ["  field: #{inspect(field)} didn't exist in actual" | acc]
+
+      %{expected: :error, field: field}, acc ->
+        ["  field: #{inspect(field)} didn't exist in expected" | acc]
+    end)
+    |> Enum.reverse()
+    |> Enum.join("\n")
+  end
+
+  defp error_message_for_missing(missing) do
     "Key for:\n" <>
       (missing
        |> Enum.sort_by(& &1.field)

@@ -123,6 +123,7 @@ defmodule CheckerCabTest do
 
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
+      # the error messages are sorted (alphanumerically) on the key
       expected_message = """
       Key for:
         field: #{inspect(:key2)} didn't exist in #{:actual}
