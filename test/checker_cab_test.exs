@@ -152,8 +152,8 @@ defmodule CheckerCabTest do
 
       Values did not match for:
         field: :key2
-          expected: "value2"
-          actual: "unexpected_value"
+          expected: #{inspect(expected.key2)}
+          actual: #{inspect(actual.key2)}
       """
 
       ## kickoff
@@ -173,11 +173,11 @@ defmodule CheckerCabTest do
 
       Values did not match for:
         field: :key2
-          expected: "value2"
-          actual: "unexpected_value"
+          expected: #{inspect(expected.key2)}
+          actual: #{inspect(actual.key2)}
         field: :key3
-          expected: "value3"
-          actual: "also_unexpected"
+          expected: #{inspect(expected.key3)}
+          actual: #{inspect(actual.key3)}
       """
 
       ## kickoff
@@ -200,11 +200,11 @@ defmodule CheckerCabTest do
 
       Values did not match for:
         field: :key1
-          expected: "value1"
-          actual: "wrong"
+          expected: #{inspect(expected.key1)}
+          actual: #{inspect(actual.key1)}
         field: :key2
-          expected: "value2"
-          actual: "unexpected_value"
+          expected: #{inspect(expected.key2)}
+          actual: #{inspect(actual.key2)}
       """
 
       ## kickoff
