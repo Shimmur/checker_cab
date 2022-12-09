@@ -92,8 +92,10 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(actual)]
 
       expected_message = """
-      Key for:
-        field: #{inspect(:key2)} didn't exist in #{:expected}
+      There were issues the comparison:
+
+      Key(s) missing:
+        field: :key2 didn't exist in expected
       """
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
@@ -111,7 +113,7 @@ defmodule CheckerCabTest do
       There were issues the comparison:
 
       Key(s) missing:
-        field: #{inspect(:key2)} didn't exist in #{:actual}
+        field: :key2 didn't exist in actual
       """
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
@@ -127,9 +129,11 @@ defmodule CheckerCabTest do
 
       # the error messages are sorted (alphanumerically) on the key
       expected_message = """
-      Key for:
-        field: #{inspect(:key2)} didn't exist in #{:actual}
-        field: #{inspect(:key3)} didn't exist in #{:actual}
+      There were issues the comparison:
+
+      Key(s) missing:
+        field: :key2 didn't exist in actual
+        field: :key3 didn't exist in actual
       """
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
@@ -144,10 +148,12 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message = """
+      There were issues the comparison:
+
       Values did not match for:
-        field: #{inspect(:key2)}
-          expected: #{inspect(expected.key2)}
-          actual: #{inspect(actual.key2)}
+        field: :key2
+          expected: "value2"
+          actual: "unexpected_value"
       """
 
       ## kickoff
@@ -163,13 +169,15 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message = """
+      There were issues the comparison:
+
       Values did not match for:
-        field: #{inspect(:key2)}
-          expected: #{inspect(expected.key2)}
-          actual: #{inspect(actual.key2)}
-        field: #{inspect(:key3)}
-          expected: #{inspect(expected.key3)}
-          actual: #{inspect(actual.key3)}
+        field: :key2
+          expected: "value2"
+          actual: "unexpected_value"
+        field: :key3
+          expected: "value3"
+          actual: "also_unexpected"
       """
 
       ## kickoff
@@ -192,12 +200,11 @@ defmodule CheckerCabTest do
 
       Values did not match for:
         field: :key1
-        expected: "value1"
-        actual: "wrong"
-
+          expected: "value1"
+          actual: "wrong"
         field: :key2
-        expected: "value2"
-        actual: "unexpected_value"
+          expected: "value2"
+          actual: "unexpected_value"
       """
 
       ## kickoff
@@ -270,5 +277,6 @@ defmodule CheckerCabTest do
 
     error
     |> ExUnit.AssertionError.message()
+    |> String.trim_trailing("     \n")
   end
 end

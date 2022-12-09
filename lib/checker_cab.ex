@@ -215,27 +215,15 @@ defmodule CheckerCab do
     |> Enum.reduce(["Values did not match for:"], fn %{actual: {:ok, actual}, expected: {:ok, expected}, field: field},
                                                      acc ->
       message =
-        "  field: #{inspect(field)}\n" <>
-          "  expected: #{inspect(expected)}\n" <>
-          "  actual: #{inspect(actual)}\n"
+        Enum.join(
+          ["  field: #{inspect(field)}", "    expected: #{inspect(expected)}", "    actual: #{inspect(actual)}"],
+          "\n"
+        )
 
       [message | acc]
     end)
     |> Enum.reverse()
     |> Enum.join("\n")
-  end
-
-  defp error_message_for_mismatched(mismatched) do
-    "Values did not match for:\n" <>
-      (mismatched
-       |> Enum.sort_by(& &1.field)
-       |> Enum.map_join(fn %{field: field, expected: {:ok, expected}, actual: {:ok, actual}} ->
-         """
-         field: #{inspect(field)}
-           expected: #{inspect(expected)}
-           actual: #{inspect(actual)}
-         """
-       end))
   end
 
   defp convert_to_atom_keys({map, :atom_keys}), do: map
