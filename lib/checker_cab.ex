@@ -179,9 +179,9 @@ defmodule CheckerCab do
   end
 
   defp error_message_for(missing, mismatched) do
-    [error_message_for_missing(missing), error_message_for_mismatched(mismatched)]
+    ["There were issues the comparison:", error_message_for_missing(missing), error_message_for_mismatched(mismatched)]
     |> Enum.reject(&(&1 == ""))
-    |> Enum.join("\n")
+    |> Enum.join("\n\n")
   end
 
   defp error_message_for_missing([]) do
@@ -191,7 +191,7 @@ defmodule CheckerCab do
   defp error_message_for_missing(missing) do
     missing
     |> Enum.sort_by(& &1.field)
-    |> Enum.reduce(["Key for:"], fn
+    |> Enum.reduce(["Key(s) missing:"], fn
       %{actual: :error, expected: :error, field: field}, acc ->
         ["  field #{inspect(field)} didn't exist in actual and expected" | acc]
 
@@ -205,24 +205,24 @@ defmodule CheckerCab do
     |> Enum.join("\n")
   end
 
-  defp error_message_for_missing(missing) do
-    "Key for:\n" <>
-      (missing
-       |> Enum.sort_by(& &1.field)
-       |> Enum.map_join(fn %{field: field} = comparison ->
-         comparison
-         |> Map.take([:expected, :actual])
-         |> Enum.reject(&match?({_key, {:ok, _}}, &1))
-         |> Enum.map_join(fn {type, _value} ->
-           """
-             field: #{inspect(field)} didn't exist in #{type}
-           """
-         end)
-       end))
-  end
-
   defp error_message_for_mismatched([]) do
     ""
+  end
+
+  defp error_message_for_mismatched(mismatched) do
+    mismatched
+    |> Enum.sort_by(& &1.field)
+    |> Enum.reduce(["Values did not match for:"], fn %{actual: {:ok, actual}, expected: {:ok, expected}, field: field},
+                                                     acc ->
+      message =
+        "  field: #{inspect(field)}\n" <>
+          "  expected: #{inspect(expected)}\n" <>
+          "  actual: #{inspect(actual)}\n"
+
+      [message | acc]
+    end)
+    |> Enum.reverse()
+    |> Enum.join("\n")
   end
 
   defp error_message_for_mismatched(mismatched) do
@@ -231,9 +231,9 @@ defmodule CheckerCab do
        |> Enum.sort_by(& &1.field)
        |> Enum.map_join(fn %{field: field, expected: {:ok, expected}, actual: {:ok, actual}} ->
          """
-           field: #{inspect(field)}
-             expected: #{inspect(expected)}
-             actual: #{inspect(actual)}
+         field: #{inspect(field)}
+           expected: #{inspect(expected)}
+           actual: #{inspect(actual)}
          """
        end))
   end

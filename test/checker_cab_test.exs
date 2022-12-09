@@ -108,7 +108,9 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message = """
-      Key for:
+      There were issues the comparison:
+
+      Key(s) missing:
         field: #{inspect(:key2)} didn't exist in #{:actual}
       """
 
@@ -168,6 +170,34 @@ defmodule CheckerCabTest do
         field: #{inspect(:key3)}
           expected: #{inspect(expected.key3)}
           actual: #{inspect(actual.key3)}
+      """
+
+      ## kickoff
+      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
+        CheckerCab.assert_values_for(input)
+      end)
+    end
+
+    test "success: error message can contain missing and mismatched fields" do
+      expected = %{key1: "value1", key2: "value2", key3: "value3"}
+      actual = %{key1: "wrong", key2: "unexpected_value"}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(expected)]
+
+      expected_message = """
+      There were issues the comparison:
+
+      Key(s) missing:
+        field: :key3 didn't exist in actual
+
+      Values did not match for:
+        field: :key1
+        expected: "value1"
+        actual: "wrong"
+
+        field: :key2
+        expected: "value2"
+        actual: "unexpected_value"
       """
 
       ## kickoff
@@ -238,6 +268,7 @@ defmodule CheckerCabTest do
   defp formatted_error_message(message) do
     error = %ExUnit.AssertionError{message: message}
 
-    ExUnit.AssertionError.message(error)
+    error
+    |> ExUnit.AssertionError.message()
   end
 end
