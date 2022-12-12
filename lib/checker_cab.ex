@@ -179,9 +179,9 @@ defmodule CheckerCab do
   end
 
   defp error_message_for(missing, mismatched) do
-    [error_message_for_missing(missing), error_message_for_mismatched(mismatched)]
+    ["There were issues the comparison:", error_message_for_missing(missing), error_message_for_mismatched(mismatched)]
     |> Enum.reject(&(&1 == ""))
-    |> Enum.join("\n")
+    |> Enum.join("\n\n")
   end
 
   defp error_message_for_missing([]) do
@@ -189,19 +189,20 @@ defmodule CheckerCab do
   end
 
   defp error_message_for_missing(missing) do
-    "Key for:\n" <>
-      (missing
-       |> Enum.sort_by(& &1.field)
-       |> Enum.map_join(fn %{field: field} = comparison ->
-         comparison
-         |> Map.take([:expected, :actual])
-         |> Enum.reject(&match?({_key, {:ok, _}}, &1))
-         |> Enum.map_join(fn {type, _value} ->
-           """
-             field: #{inspect(field)} didn't exist in #{type}
-           """
-         end)
-       end))
+    missing
+    |> Enum.sort_by(& &1.field)
+    |> Enum.reduce(["Key(s) missing:"], fn
+      %{actual: :error, expected: :error, field: field}, acc ->
+        ["  field: #{inspect(field)} didn't exist in actual and expected" | acc]
+
+      %{actual: :error, field: field}, acc ->
+        ["  field: #{inspect(field)} didn't exist in actual" | acc]
+
+      %{expected: :error, field: field}, acc ->
+        ["  field: #{inspect(field)} didn't exist in expected" | acc]
+    end)
+    |> Enum.reverse()
+    |> Enum.join("\n")
   end
 
   defp error_message_for_mismatched([]) do
@@ -209,16 +210,20 @@ defmodule CheckerCab do
   end
 
   defp error_message_for_mismatched(mismatched) do
-    "Values did not match for:\n" <>
-      (mismatched
-       |> Enum.sort_by(& &1.field)
-       |> Enum.map_join(fn %{field: field, expected: {:ok, expected}, actual: {:ok, actual}} ->
-         """
-           field: #{inspect(field)}
-             expected: #{inspect(expected)}
-             actual: #{inspect(actual)}
-         """
-       end))
+    mismatched
+    |> Enum.sort_by(& &1.field)
+    |> Enum.reduce(["Values did not match for:"], fn %{actual: {:ok, actual}, expected: {:ok, expected}, field: field},
+                                                     acc ->
+      message =
+        Enum.join(
+          ["  field: #{inspect(field)}", "    expected: #{inspect(expected)}", "    actual: #{inspect(actual)}"],
+          "\n"
+        )
+
+      [message | acc]
+    end)
+    |> Enum.reverse()
+    |> Enum.join("\n")
   end
 
   defp convert_to_atom_keys({map, :atom_keys}), do: map

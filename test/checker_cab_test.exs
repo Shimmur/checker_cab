@@ -92,8 +92,10 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(actual)]
 
       expected_message = """
-      Key for:
-        field: #{inspect(:key2)} didn't exist in #{:expected}
+      There were issues the comparison:
+
+      Key(s) missing:
+        field: :key2 didn't exist in expected
       """
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
@@ -108,8 +110,29 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message = """
-      Key for:
-        field: #{inspect(:key2)} didn't exist in #{:actual}
+      There were issues the comparison:
+
+      Key(s) missing:
+        field: :key2 didn't exist in actual
+      """
+
+      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
+        CheckerCab.assert_values_for(input)
+      end)
+    end
+
+    test "success: raised error works for field missing from actual and expected" do
+      expected = %{}
+      actual = %{}
+
+      input = [expected: expected, actual: actual, fields: [:missing_in_both]]
+
+      # the error messages are sorted (alphanumerically) on the key
+      expected_message = """
+      There were issues the comparison:
+
+      Key(s) missing:
+        field: :missing_in_both didn't exist in actual and expected
       """
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
@@ -123,10 +146,13 @@ defmodule CheckerCabTest do
 
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
+      # the error messages are sorted (alphanumerically) on the key
       expected_message = """
-      Key for:
-        field: #{inspect(:key2)} didn't exist in #{:actual}
-        field: #{inspect(:key3)} didn't exist in #{:actual}
+      There were issues the comparison:
+
+      Key(s) missing:
+        field: :key2 didn't exist in actual
+        field: :key3 didn't exist in actual
       """
 
       assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
@@ -141,8 +167,10 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message = """
+      There were issues the comparison:
+
       Values did not match for:
-        field: #{inspect(:key2)}
+        field: :key2
           expected: #{inspect(expected.key2)}
           actual: #{inspect(actual.key2)}
       """
@@ -160,13 +188,42 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message = """
+      There were issues the comparison:
+
       Values did not match for:
-        field: #{inspect(:key2)}
+        field: :key2
           expected: #{inspect(expected.key2)}
           actual: #{inspect(actual.key2)}
-        field: #{inspect(:key3)}
+        field: :key3
           expected: #{inspect(expected.key3)}
           actual: #{inspect(actual.key3)}
+      """
+
+      ## kickoff
+      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
+        CheckerCab.assert_values_for(input)
+      end)
+    end
+
+    test "success: error message can contain missing and mismatched fields" do
+      expected = %{key1: "value1", key2: "value2", key3: "value3"}
+      actual = %{key1: "wrong", key2: "unexpected_value"}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(expected)]
+
+      expected_message = """
+      There were issues the comparison:
+
+      Key(s) missing:
+        field: :key3 didn't exist in actual
+
+      Values did not match for:
+        field: :key1
+          expected: #{inspect(expected.key1)}
+          actual: #{inspect(actual.key1)}
+        field: :key2
+          expected: #{inspect(expected.key2)}
+          actual: #{inspect(actual.key2)}
       """
 
       ## kickoff
@@ -237,6 +294,8 @@ defmodule CheckerCabTest do
   defp formatted_error_message(message) do
     error = %ExUnit.AssertionError{message: message}
 
-    ExUnit.AssertionError.message(error)
+    error
+    |> ExUnit.AssertionError.message()
+    |> String.trim_trailing("     \n")
   end
 end
