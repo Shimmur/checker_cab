@@ -121,6 +121,25 @@ defmodule CheckerCabTest do
       end)
     end
 
+    test "success: raised error works for field missing from actual and expected" do
+      expected = %{}
+      actual = %{}
+
+      input = [expected: expected, actual: actual, fields: [:missing_in_both]]
+
+      # the error messages are sorted (alphanumerically) on the key
+      expected_message = """
+      There were issues the comparison:
+
+      Key(s) missing:
+        field: :missing_in_both didn't exist in actual and expected
+      """
+
+      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
+        CheckerCab.assert_values_for(input)
+      end)
+    end
+
     test "success: raised errors include all missing fields" do
       expected = %{key1: "value1", key2: "value2", key3: "value3"}
       actual = %{key1: "value1"}

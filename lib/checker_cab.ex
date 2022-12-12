@@ -193,7 +193,7 @@ defmodule CheckerCab do
     |> Enum.sort_by(& &1.field)
     |> Enum.reduce(["Key(s) missing:"], fn
       %{actual: :error, expected: :error, field: field}, acc ->
-        ["  field #{inspect(field)} didn't exist in actual and expected" | acc]
+        ["  field: #{inspect(field)} didn't exist in actual and expected" | acc]
 
       %{actual: :error, field: field}, acc ->
         ["  field: #{inspect(field)} didn't exist in actual" | acc]
