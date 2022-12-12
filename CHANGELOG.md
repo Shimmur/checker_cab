@@ -1,4 +1,8 @@
 # Changelog
+## [1.1.0] - 2022-12-12
+- Support Elixir 1.14.x and OTP 25
+- Increase test output to show all issues from call to `assert_values_for/1`.
+
 ## [1.0.1] - 2022-11-17
 - Add improved failure output: catch and batch failures
 
