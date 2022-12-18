@@ -65,6 +65,39 @@ will assist in catching regressions if the `update` function begins to set other
 values or if the view code does not capture newly-added fields to the `User`
 schema.
 
+For the sake of example, if the controller action under test returned a `User`
+with the same keys and values differing only with the value for id, then the
+test would fail and the output may look like the example below:
+
+```
+  1) test success: it returns a 200 and a newly updated User (UserControllerTest)
+     test/user_controller_test.exs:294
+     There were issues the comparison:
+
+     Values did not match for:
+       field: :id
+         expected: "1ee3e9c4-fa81-4612-a13a-c554e5a3d438"
+         actual: "a2ab48fa-96fb-41e5-8f2d-2f94f47fef91"
+     code: assert_values_for(expected: expected_updates, actual: {returned_user :string_keys}, fields: fields_for(User))
+     stacktrace:
+     ## stacktrace here
+```
+As a different example, lets assume the same unit test. Through working a new
+feature, we add a `new_key` field to our `User` struct, but forget to add
+`new_key` to our `Factory` module. Checker Cab should detect the mismatch and
+alert the developer with following output:
+
+```
+  1) test success: it returns a 200 and a newly updated User (UserControllerTest)
+     test/user_controller_test.exs:294
+     There were issues the comparison:
+
+     Key(s) missing:
+       field: :new_key didn't exist in expected
+     code: assert_values_for(expected: expected_updates, actual: {returned_user :string_keys}, fields: fields_for(User))
+     stacktrace:
+     ## stacktrace here
+```
 ## Installation
 
 Add it to your deps.
