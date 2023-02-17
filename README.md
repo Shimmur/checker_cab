@@ -72,7 +72,7 @@ test would fail and the output may look like the example below:
 ```
   1) test success: it returns a 200 and a newly updated User (UserControllerTest)
      test/user_controller_test.exs:294
-     There were issues the comparison:
+     There were issues with the comparison:
 
      Values did not match for:
        field: :id
@@ -82,7 +82,7 @@ test would fail and the output may look like the example below:
      stacktrace:
      ## stacktrace here
 ```
-As a different example, lets assume the same unit test. Through working a new
+As a different example, lets assume the same unit test. While adding a new
 feature, we add a `new_key` field to our `User` struct, but forget to add
 `new_key` to our `Factory` module. Checker Cab should detect the mismatch and
 alert the developer with following output:
@@ -90,7 +90,7 @@ alert the developer with following output:
 ```
   1) test success: it returns a 200 and a newly updated User (UserControllerTest)
      test/user_controller_test.exs:294
-     There were issues the comparison:
+     There were issues with the comparison:
 
      Key(s) missing:
        field: :new_key didn't exist in expected
