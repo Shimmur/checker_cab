@@ -179,7 +179,11 @@ defmodule CheckerCab do
   end
 
   defp error_message_for(missing, mismatched) do
-    ["There were issues the comparison:", error_message_for_missing(missing), error_message_for_mismatched(mismatched)]
+    [
+      "There were issues with the comparison:",
+      error_message_for_missing(missing),
+      error_message_for_mismatched(mismatched)
+    ]
     |> Enum.reject(&(&1 == ""))
     |> Enum.join("\n\n")
   end
