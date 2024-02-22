@@ -92,7 +92,7 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(actual)]
 
       expected_message = """
-      There were issues the comparison:
+      There were issues with the comparison:
 
       Key(s) missing:
         field: :key2 didn't exist in expected
@@ -110,7 +110,7 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message = """
-      There were issues the comparison:
+      There were issues with the comparison:
 
       Key(s) missing:
         field: :key2 didn't exist in actual
@@ -129,7 +129,7 @@ defmodule CheckerCabTest do
 
       # the error messages are sorted (alphanumerically) on the key
       expected_message = """
-      There were issues the comparison:
+      There were issues with the comparison:
 
       Key(s) missing:
         field: :missing_in_both didn't exist in actual and expected
@@ -148,7 +148,7 @@ defmodule CheckerCabTest do
 
       # the error messages are sorted (alphanumerically) on the key
       expected_message = """
-      There were issues the comparison:
+      There were issues with the comparison:
 
       Key(s) missing:
         field: :key2 didn't exist in actual
@@ -167,7 +167,7 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message = """
-      There were issues the comparison:
+      There were issues with the comparison:
 
       Values did not match for:
         field: :key2
@@ -188,7 +188,7 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message = """
-      There were issues the comparison:
+      There were issues with the comparison:
 
       Values did not match for:
         field: :key2
@@ -212,7 +212,7 @@ defmodule CheckerCabTest do
       input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       expected_message = """
-      There were issues the comparison:
+      There were issues with the comparison:
 
       Key(s) missing:
         field: :key3 didn't exist in actual
