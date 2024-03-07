@@ -1,7 +1,7 @@
 defmodule CheckerCab.MixProject do
   use Mix.Project
 
-  @version "1.1.0"
+  @version "1.2.0"
 
   def project do
     [
@@ -44,10 +44,10 @@ defmodule CheckerCab.MixProject do
   defp deps do
     [
       # Dev and test dependencies.
-      {:ecto, "~> 3.7"},
-      {:ex_doc, "~> 0.20", only: :dev},
-      {:dialyxir, "~> 0.5", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.14", only: :test}
+      {:ecto, "~> 3.11"},
+      {:ex_doc, "~> 0.31.2", only: :dev},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.18", only: :test}
     ]
   end
 end

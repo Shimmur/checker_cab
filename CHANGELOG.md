@@ -1,4 +1,11 @@
 # Changelog
+
+## [1.2.0] - 2024-02-07
+- Update all dependencies
+- Support Elixir 1.15.x and 1.16.x
+- Support OTP 26
+- Update testing approach to work with newer Elixir and OTP
+
 ## [1.1.0] - 2022-12-12
 - Support Elixir 1.14.x and OTP 25
 - Increase test output to show all issues from call to `assert_values_for/1`.
