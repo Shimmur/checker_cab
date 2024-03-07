@@ -98,9 +98,12 @@ defmodule CheckerCabTest do
         field: :key2 didn't exist in expected
       """
 
-      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
-        CheckerCab.assert_values_for(input)
-      end)
+      %{message: actual_message} =
+        assert_raise(ExUnit.AssertionError, fn ->
+          CheckerCab.assert_values_for(input)
+        end)
+
+      assert_messages_are_equal(expected_message, actual_message)
     end
 
     test "success: it raises when a key in `:fields` is missing from the `:actual` input" do
@@ -116,9 +119,12 @@ defmodule CheckerCabTest do
         field: :key2 didn't exist in actual
       """
 
-      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
-        CheckerCab.assert_values_for(input)
-      end)
+      %{message: actual_message} =
+        assert_raise(ExUnit.AssertionError, fn ->
+          CheckerCab.assert_values_for(input)
+        end)
+
+      assert_messages_are_equal(expected_message, actual_message)
     end
 
     test "success: raised error works for field missing from actual and expected" do
@@ -135,9 +141,12 @@ defmodule CheckerCabTest do
         field: :missing_in_both didn't exist in actual and expected
       """
 
-      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
-        CheckerCab.assert_values_for(input)
-      end)
+      %{message: actual_message} =
+        assert_raise(ExUnit.AssertionError, fn ->
+          CheckerCab.assert_values_for(input)
+        end)
+
+      assert_messages_are_equal(expected_message, actual_message)
     end
 
     test "success: raised errors include all missing fields" do
@@ -155,9 +164,12 @@ defmodule CheckerCabTest do
         field: :key3 didn't exist in actual
       """
 
-      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
-        CheckerCab.assert_values_for(input)
-      end)
+      %{message: actual_message} =
+        assert_raise(ExUnit.AssertionError, fn ->
+          CheckerCab.assert_values_for(input)
+        end)
+
+      assert_messages_are_equal(expected_message, actual_message)
     end
 
     test "success: it raises when two atom-keyed maps have the same keys, but different values" do
@@ -176,9 +188,12 @@ defmodule CheckerCabTest do
       """
 
       ## kickoff
-      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
-        CheckerCab.assert_values_for(input)
-      end)
+      %{message: actual_message} =
+        assert_raise(ExUnit.AssertionError, fn ->
+          CheckerCab.assert_values_for(input)
+        end)
+
+      assert_messages_are_equal(expected_message, actual_message)
     end
 
     test "success: raised errors include all mismatched fields" do
@@ -200,9 +215,12 @@ defmodule CheckerCabTest do
       """
 
       ## kickoff
-      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
-        CheckerCab.assert_values_for(input)
-      end)
+      %{message: actual_message} =
+        assert_raise(ExUnit.AssertionError, fn ->
+          CheckerCab.assert_values_for(input)
+        end)
+
+      assert_messages_are_equal(expected_message, actual_message)
     end
 
     test "success: error message can contain missing and mismatched fields" do
@@ -227,9 +245,12 @@ defmodule CheckerCabTest do
       """
 
       ## kickoff
-      assert_raise(ExUnit.AssertionError, formatted_error_message(expected_message), fn ->
-        CheckerCab.assert_values_for(input)
-      end)
+      %{message: actual_message} =
+        assert_raise(ExUnit.AssertionError, fn ->
+          CheckerCab.assert_values_for(input)
+        end)
+
+      assert_messages_are_equal(expected_message, actual_message)
     end
 
     test "success: with atom keys explicitly specified" do
@@ -291,11 +312,10 @@ defmodule CheckerCabTest do
     end
   end
 
-  defp formatted_error_message(message) do
-    error = %ExUnit.AssertionError{message: message}
+  defp assert_messages_are_equal(expected, actual) do
+    expected_list = expected |> String.trim_trailing() |> String.split("\n")
+    actual_list = actual |> String.split("\n")
 
-    error
-    |> ExUnit.AssertionError.message()
-    |> String.trim_trailing("     \n")
+    assert expected_list == actual_list
   end
 end
