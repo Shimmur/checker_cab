@@ -1,5 +1,8 @@
 # Changelog
 
+## ## [1.2.1] - 2024-02-11
+- Update documentation config for better hex_doc experience
+
 ## [1.2.0] - 2024-02-07
 - Update all dependencies
 - Support Elixir 1.15.x and 1.16.x
