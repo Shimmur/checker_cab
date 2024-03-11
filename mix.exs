@@ -1,7 +1,7 @@
 defmodule CheckerCab.MixProject do
   use Mix.Project
 
-  @version "1.2.0"
+  @version "1.2.1"
 
   def project do
     [
@@ -21,6 +21,7 @@ defmodule CheckerCab.MixProject do
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
         plt_add_apps: [:ex_unit]
       ],
+      docs: docs(),
       package: package()
     ]
   end
@@ -48,6 +49,14 @@ defmodule CheckerCab.MixProject do
       {:ex_doc, "~> 0.31.2", only: :dev},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.18", only: :test}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      name: "CheckerCab",
+      extras: ["README.md", "CHANGELOG.md", "LICENSE"]
     ]
   end
 end
