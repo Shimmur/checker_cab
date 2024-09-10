@@ -111,6 +111,32 @@ def deps do
 end
 ```
 
+## Custom Type Matching
+The default implementation to compare values in CheckerCab is to use `==/2`.
+If you need to compare types where that won't work, you can add additional
+implementations for the CheckerCab.MatchTypes in your application.
+
+```elixir
+defimpl CheckerCab.MatchTypes, for: Decimal do
+  def values_match?(expected, actual) do
+    Decimal.equal?(expected, actual)
+  end
+end
+```
+
+You can then use `assert_values_for/1` as you normally would:
+
+```elixir
+    test "success: with equivalent Decimal values" do
+      expected = %{key1: Decimal.new("1.10")}
+      actual = %{key1: Decimal.new("1.1")}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(expected)]
+
+      assert :ok == CheckerCab.assert_values_for(input)
+    end
+```
+
 ## Integrating into a test suite
 Import `CheckerCab` to your test case file:
 ```elixir

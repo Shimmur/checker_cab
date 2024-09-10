@@ -168,8 +168,8 @@ defmodule CheckerCab do
     !match?({:ok, _}, expected) || !match?({:ok, _}, actual)
   end
 
-  defp mismatched?(%{expected: expected, actual: actual}) do
-    expected != actual
+  defp mismatched?(%{expected: {:ok, expected}, actual: {:ok, actual}}) do
+    not CheckerCab.MatchTypes.values_match?(expected, actual)
   end
 
   defp fetch_and_convert(map, field_name, opts) do

@@ -299,7 +299,7 @@ defmodule CheckerCabTest do
     end
   end
 
-  describe "assert_values for with options" do
+  describe "assert_values_for with options" do
     test "success: with :convert_dates set to true" do
       datetime = DateTime.utc_now()
       date = datetime |> DateTime.to_date()
@@ -307,6 +307,17 @@ defmodule CheckerCabTest do
       actual = %{key1: DateTime.to_iso8601(datetime), key2: Date.to_iso8601(date)}
 
       input = [expected: expected, actual: actual, fields: Map.keys(expected), opts: [convert_dates: true]]
+
+      assert :ok == CheckerCab.assert_values_for(input)
+    end
+  end
+
+  describe "assert_values_for with custom matchers" do
+    test "success: with custom matchers" do
+      expected = %{key1: Decimal.new("1.10")}
+      actual = %{key1: Decimal.new("1.1")}
+
+      input = [expected: expected, actual: actual, fields: Map.keys(expected)]
 
       assert :ok == CheckerCab.assert_values_for(input)
     end
