@@ -106,7 +106,7 @@ Add it to your deps.
 def deps do
   [
     ## check hex.pm for the latest version
-    {:checker_cab, "~> 1.0.1", runtime: false, only: [:test]},
+    {:checker_cab, "~> 1.4", runtime: false, only: [:test]},
   ]
 end
 ```
