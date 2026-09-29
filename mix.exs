@@ -1,13 +1,13 @@
 defmodule CheckerCab.MixProject do
   use Mix.Project
 
-  @version "1.3.0"
+  @version "1.4.0"
 
   def project do
     [
       app: :checker_cab,
       version: @version,
-      elixir: "~> 1.11",
+      elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
@@ -47,11 +47,11 @@ defmodule CheckerCab.MixProject do
   defp deps do
     [
       # Dev and test dependencies.
-      {:ecto, "~> 3.11"},
-      {:ex_doc, "~> 0.31.2", only: :dev},
+      {:ecto, "~> 3.14"},
+      {:ex_doc, "~> 0.40", only: :dev, runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.18", only: :test},
-      {:decimal, "~> 2.0"}
+      {:decimal, "~> 3.0"}
     ]
   end
 

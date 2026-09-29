@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0] - 2026-09-25
+- Update all dependencies (Ecto 3.14, Decimal 3.x, ExDoc 0.40, Dialyxir 1.4.8, ExCoveralls 0.18.5)
+- Require Elixir 1.15 or newer (Elixir 1.11 through 1.14 are no longer supported)
+- Support Elixir 1.17.x, 1.18.x and 1.19.x
+- Support OTP 27 and 28 (OTP 25 and older are no longer tested)
+- Move CI to ubuntu-24.04 and update GitHub Actions
+
 ## [1.3.0] - 2024-02-11
 - Add protocol to allow custom type matching rules
 - Update README with example
